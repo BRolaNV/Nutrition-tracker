@@ -17,7 +17,7 @@ public class User {
     private double fat;
     private double carbohydrates;
     private double fiber;
-    private double calories = protein * 4 + fat * 9 + carbohydrates * 4;
+    private double calories;
 
     public double getProtein() {
         return protein;
@@ -52,6 +52,7 @@ public class User {
     }
 
     public double getCalories(){
+        this.calories = protein * 4 + fat * 9 + carbohydrates * 4;
         return calories;
     }
 }
