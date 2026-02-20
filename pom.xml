@@ -16,12 +16,19 @@
   </properties>
 
   <dependencies>
-    <!-- SQLite Database Driver -->
-    <dependency>
-      <groupId>org.xerial</groupId>
-      <artifactId>sqlite-jdbc</artifactId>
-      <version>3.44.1.0</version>
-    </dependency>
+      <!-- SQLite Database Driver -->
+      <dependency>
+        <groupId>org.xerial</groupId>
+        <artifactId>sqlite-jdbc</artifactId>
+        <version>3.44.1.0</version>
+      </dependency>
+
+      <!-- SLF4J (убирает предупреждения) -->
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-nop</artifactId>
+        <version>2.0.9</version>
+      </dependency>
   </dependencies>
 </project>
 

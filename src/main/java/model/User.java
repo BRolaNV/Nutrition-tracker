@@ -4,9 +4,11 @@ import java.util.HashMap;
 
 public class User {
     private String UserName;
+    private int id;
 
-    public User(String name){
+    public User(String name, int id){
         this.UserName = name;
+        this.id = id;
     }
 
     public String getUserName(){
