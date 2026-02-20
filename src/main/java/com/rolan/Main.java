@@ -1,5 +1,6 @@
 package com.rolan;
 
+import dao.Database;
 import model.MealEntry;
 import model.User;
 
@@ -41,35 +42,35 @@ public class Main {
         System.out.println();
         System.out.println("--- Comparison with the target ---");
         System.out.println();
-        System.out.printf("%-15s Цель: %7.1fg | Факт: %7.1fg | Разница: %+7.1fg (%+6.1f%%)%n",
+        System.out.printf("%-25s Цель: %10.1fg | Факт: %7.1fg | Разница: %+7.1fg (%+6.1f%%)%n",
                 "Protein:",
                 user.getProtein(),
                 totalProtein,
                 totalProtein - user.getProtein(),
                 (totalProtein - user.getProtein()) / user.getProtein() * 100
         );
-        System.out.printf("%-15s Цель: %7.1fg | Факт: %7.1fg | Разница: %+7.1fg (%+6.1f%%)%n",
+        System.out.printf("%-25s Цель: %10.1fg | Факт: %7.1fg | Разница: %+7.1fg (%+6.1f%%)%n",
                 "Fat:",
                 user.getFat(),
                 totalFat,
                 totalFat - user.getFat(),
                 (totalFat - user.getFat()) / user.getFat() * 100
         );
-        System.out.printf("%-15s Цель: %7.1fg | Факт: %7.1fg | Разница: %+7.1fg (%+6.1f%%)%n",
+        System.out.printf("%-25s Цель: %10.1fg | Факт: %7.1fg | Разница: %+7.1fg (%+6.1f%%)%n",
                 "Carbohydrates:",
                 user.getCarbohydrates(),
                 totalCarbohydrates,
                 totalCarbohydrates - user.getCarbohydrates(),
                 (totalCarbohydrates - user.getCarbohydrates()) / user.getCarbohydrates() * 100
         );
-        System.out.printf("%-15s Цель: %7.1fg | Факт: %7.1fg | Разница: %+7.1fg (%+6.1f%%)%n",
-                "Protein:",
+        System.out.printf("%-25s Цель: %10.1fg | Факт: %7.1fg | Разница: %+7.1fg (%+6.1f%%)%n",
+                "Fiber:",
                 user.getFiber(),
                 totalFiber,
                 totalFiber - user.getFiber(),
                 (totalFiber - user.getFiber()) / user.getFiber() * 100
         );
-        System.out.printf("%-15s Цель: %7.1fkcal | Факт: %7.1fkcal | Разница: %+7.1fkcal (%+6.1f%%)%n",
+        System.out.printf("%-25s Цель: %10.1fkcal | Факт: %7.1fkcal | Разница: %+7.1fkcal (%+6.1f%%)%n",
                 "Calories:",
                 user.getCalories(),
                 totalCalories,
@@ -80,6 +81,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
+
+        Database.createTables();
 
         Scanner scanner = new Scanner(System.in);
 
