@@ -1,136 +1,183 @@
 package com.rolan;
 
 import dao.Database;
+import dao.MealEntryDAO;
+import dao.UserDAO;
+import dao.UserTargetDAO;
 import model.MealEntry;
 import model.User;
+import model.UserTargets;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
-    static ArrayList<MealEntry> mealEntries = new ArrayList<>();
-
-    public static void printDailySummary(ArrayList<MealEntry> meals, User user) {
-        double totalProtein = 0;
-        double totalFat = 0;
-        double totalCarbohydrates = 0;
-        double totalFiber = 0;
-        double totalCalories;
-
-        for (MealEntry mealEntry : meals){
-            totalProtein += mealEntry.getProtein();
-            totalFat += mealEntry.getFat();
-            totalCarbohydrates += mealEntry.getCarbohydrates();
-            totalFiber += mealEntry.getFiber();
-        }
-
-        totalCalories = totalProtein * 4 + totalFat * 9 + totalCarbohydrates * 4;
-
-        System.out.println();
-        System.out.println("Total today: ");
-        System.out.println();
-
-        System.out.println("Protein: " + totalProtein);
-        System.out.println("Fat: " + totalFat);
-        System.out.println("Carbohydrates: " + totalCarbohydrates);
-        System.out.println("Fiber: " + totalFiber);
-        System.out.println("Calories: " + totalCalories);
-
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println("--- Comparison with the target ---");
-        System.out.println();
-        System.out.printf("%-25s Цель: %10.1fg | Факт: %7.1fg | Разница: %+7.1fg (%+6.1f%%)%n",
-                "Protein:",
-                user.getProtein(),
-                totalProtein,
-                totalProtein - user.getProtein(),
-                (totalProtein - user.getProtein()) / user.getProtein() * 100
-        );
-        System.out.printf("%-25s Цель: %10.1fg | Факт: %7.1fg | Разница: %+7.1fg (%+6.1f%%)%n",
-                "Fat:",
-                user.getFat(),
-                totalFat,
-                totalFat - user.getFat(),
-                (totalFat - user.getFat()) / user.getFat() * 100
-        );
-        System.out.printf("%-25s Цель: %10.1fg | Факт: %7.1fg | Разница: %+7.1fg (%+6.1f%%)%n",
-                "Carbohydrates:",
-                user.getCarbohydrates(),
-                totalCarbohydrates,
-                totalCarbohydrates - user.getCarbohydrates(),
-                (totalCarbohydrates - user.getCarbohydrates()) / user.getCarbohydrates() * 100
-        );
-        System.out.printf("%-25s Цель: %10.1fg | Факт: %7.1fg | Разница: %+7.1fg (%+6.1f%%)%n",
-                "Fiber:",
-                user.getFiber(),
-                totalFiber,
-                totalFiber - user.getFiber(),
-                (totalFiber - user.getFiber()) / user.getFiber() * 100
-        );
-        System.out.printf("%-25s Цель: %10.1fkcal | Факт: %7.1fkcal | Разница: %+7.1fkcal (%+6.1f%%)%n",
-                "Calories:",
-                user.getCalories(),
-                totalCalories,
-                totalCalories - user.getCalories(),
-                (totalCalories - user.getCalories()) / user.getCalories() * 100
-        );
-
-    }
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
         Database.createTables();
 
         Scanner scanner = new Scanner(System.in);
 
-        User Rolan = new User("Rolan");
+        System.out.print("Enter Your name: ");
+        String name = scanner.nextLine();
+        User user;
+        UserTargets userTargets;
 
-        System.out.print("Enter Your target Protein: ");
-        Rolan.setProtein(scanner.nextDouble());
-        System.out.print("Enter Your target Fat: ");
-        Rolan.setFat(scanner.nextDouble());
-        System.out.print("Enter Your target Carbohydrates: ");
-        Rolan.setCarbohydrates(scanner.nextDouble());
-        System.out.print("Enter Your target Fiber: ");
-        Rolan.setFiber(scanner.nextDouble());
+        if (!UserDAO.existsByName(name)) {
+            user = new User(name, UserDAO.saveUser(name));
+            System.out.print("Enter Your target Protein: ");
+            double protein = scanner.nextDouble();
+            System.out.print("Enter Your target Fat: ");
+            double fat = scanner.nextDouble();
+            System.out.print("Enter Your target Carbohydrates: ");
+            double carbohydrates = scanner.nextDouble();
+            System.out.print("Enter Your target Fiber: ");
+            double fiber = scanner.nextDouble();
+            scanner.nextLine();
+            userTargets = new UserTargets(user.getId(), protein, fat, carbohydrates, fiber);
+            UserTargetDAO.saveTargets(userTargets);
+        } else {
+            user = UserDAO.findByName(name);
+            if (!UserTargetDAO.existsByUserId(user)){
+                System.out.print("Enter Your target Protein: ");
+                double protein = scanner.nextDouble();
+                System.out.print("Enter Your target Fat: ");
+                double fat = scanner.nextDouble();
+                System.out.print("Enter Your target Carbohydrates: ");
+                double carbohydrates = scanner.nextDouble();
+                System.out.print("Enter Your target Fiber: ");
+                double fiber = scanner.nextDouble();
+                scanner.nextLine();
+                userTargets = new UserTargets(user.getId(), protein, fat, carbohydrates, fiber);
+                UserTargetDAO.saveTargets(userTargets);
+            } else {
+                userTargets = UserTargetDAO.findTargetsByUserId(user);
+            }
 
-        System.out.println("Protein: " + Rolan.getProtein());
-        System.out.println("Fat: " + Rolan.getFat());
-        System.out.println("Carbohydrates: " + Rolan.getCarbohydrates());
-        System.out.println("Fiber: " + Rolan.getFiber());
-        System.out.println("Calories: " + Rolan.getCalories());
-        scanner.nextLine();
+        }
+
+        double proteinTotal = 0;
+        double fatTotal = 0;
+        double carbohydratesTotal = 0;
+        double fiberTotal = 0;
+        double caloriesTotal = 0;
 
         System.out.println();
         System.out.println("--- Adding meals ---");
 
         while (true) {
             System.out.print("Name of meal (or 'stop'): ");
-            String name = scanner.nextLine();
+            String nameOfMeal = scanner.nextLine();
 
-            if (name.equals("stop")) {
+            if (nameOfMeal.equals("stop")) {
+
+                List<MealEntry> mealEntriesTotal = MealEntryDAO.findMealEntriesByUserId(user);
+
+                proteinTotal = 0;
+                fatTotal = 0;
+                carbohydratesTotal = 0;
+                fiberTotal = 0;
+                caloriesTotal = 0;
+
+                for (MealEntry meal : mealEntriesTotal) {
+                    proteinTotal += meal.getProtein();
+                    fatTotal += meal.getFat();
+                    carbohydratesTotal += meal.getCarbohydrates();
+                    fiberTotal += meal.getFiber();
+                    caloriesTotal += meal.getCalories();
+                }
+
+                UserTargets ut = UserTargetDAO.findTargetsByUserId(user);
+
+                double proteinTarget = ut.getProtein();
+                double fatTarget = ut.getFat();
+                double carbohydratesTarget = ut.getCarbohydrates();
+                double fiberTarget = ut.getFiber();
+                double caloriesTarget = ut.getCalories();
+
+                System.out.println("--- Comparison with the target ---");
+                System.out.println();
+                System.out.printf("%-15s Цель: %12.1fg    | Факт: %10.1fg    | Разница: %+10.1fg    (%+6.1f%%)%n",
+                        "Protein:",
+                        proteinTarget,
+                        proteinTotal,
+                        proteinTotal - proteinTarget,
+                        (proteinTotal - proteinTarget) / proteinTarget * 100
+                );
+                System.out.printf("%-15s Цель: %12.1fg    | Факт: %10.1fg    | Разница: %+10.1fg    (%+6.1f%%)%n",
+                        "Fat:",
+                        fatTarget,
+                        fatTotal,
+                        fatTotal - fatTarget,
+                        (fatTotal - fatTarget) / fatTarget * 100
+                );
+                System.out.printf("%-15s Цель: %12.1fg    | Факт: %10.1fg    | Разница: %+10.1fg    (%+6.1f%%)%n",
+                        "Carbohydrates:",
+                        carbohydratesTarget,
+                        carbohydratesTotal,
+                        carbohydratesTotal - carbohydratesTarget,
+                        (carbohydratesTotal - carbohydratesTarget) / carbohydratesTarget * 100
+                );
+                System.out.printf("%-15s Цель: %12.1fg    | Факт: %10.1fg    | Разница: %+10.1fg    (%+6.1f%%)%n",
+                        "Fiber:",
+                        fiberTarget,
+                        fiberTotal,
+                        fiberTotal - fiberTarget,
+                        (fiberTotal - fiberTarget) / fiberTarget * 100
+                );
+                System.out.printf("%-15s Цель: %12.1fkcal | Факт: %10.1fkcal | Разница: %+10.1fkcal (%+6.1f%%)%n",
+                        "Calories:",
+                        caloriesTarget,
+                        caloriesTotal,
+                        caloriesTotal - caloriesTarget,
+                        (caloriesTotal - caloriesTarget) / caloriesTarget * 100
+                );
+
                 break;
             }
 
-            MealEntry mealEntry = new MealEntry();
-            mealEntry.setNameOfMeal(name);
-
             System.out.print("Protein: ");
-            mealEntry.setProtein(scanner.nextDouble());
+            double protein = scanner.nextDouble();
             System.out.print("Fat: ");
-            mealEntry.setFat(scanner.nextDouble());
+            double fat = scanner.nextDouble();
             System.out.print("Carbohydrates: ");
-            mealEntry.setCarbohydrates(scanner.nextDouble());
+            double carbohydrates = scanner.nextDouble();
             System.out.print("Fiber: ");
-            mealEntry.setFiber(scanner.nextDouble());
+            double fiber = scanner.nextDouble();
             scanner.nextLine();
 
-            mealEntries.add(mealEntry);
+            MealEntry mealEntry = new MealEntry(user.getId(), nameOfMeal, protein, fat, carbohydrates, fiber);
+            MealEntryDAO.saveMealEntry(mealEntry);
+
+            List<MealEntry> mealEntriesTotal = MealEntryDAO.findMealEntriesByUserId(user);
+
+            proteinTotal = 0;
+            fatTotal = 0;
+            carbohydratesTotal = 0;
+            fiberTotal = 0;
+            caloriesTotal = 0;
+
+            for (MealEntry meal : mealEntriesTotal) {
+                proteinTotal += meal.getProtein();
+                fatTotal += meal.getFat();
+                carbohydratesTotal += meal.getCarbohydrates();
+                fiberTotal += meal.getFiber();
+                caloriesTotal += meal.getCalories();
+            }
+
+            System.out.println("\nYou've already eaten today: ");
+
+            System.out.print("\nProtein: " + String.format("%.2f", proteinTotal));
+            System.out.print("\nFat: " + String.format("%.2f", fatTotal));
+            System.out.print("\nCarbohydrates: " + String.format("%.2f", carbohydratesTotal));
+            System.out.print("\nFiber: " + String.format("%.2f", fiberTotal));
+            System.out.print("\nCalories: " + String.format("%.2f", caloriesTotal) + "\n\n");
+
         }
 
-        printDailySummary(mealEntries, Rolan);
     }
 }

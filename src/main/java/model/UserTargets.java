@@ -4,10 +4,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-public class MealEntry {
+public class UserTargets {
 
     private int userId;
-    private String nameOfMeal;
     private double protein;
     private double fat;
     private double carbohydrates;
@@ -15,9 +14,8 @@ public class MealEntry {
     private double calories;
     private LocalDate date;
 
-    public MealEntry(int userId, String nameOfMeal, double protein, double fat, double carbohydrates, double fiber) {
+    public UserTargets(int userId, double protein, double fat, double carbohydrates, double fiber) {
         this.userId = userId;
-        this.nameOfMeal = nameOfMeal;
         this.protein = protein;
         this.fat = fat;
         this.carbohydrates = carbohydrates;
@@ -26,24 +24,6 @@ public class MealEntry {
 
     public int getUserId() {
         return userId;
-    }
-
-    public String getNameOfMeal() {
-        return nameOfMeal;
-    }
-
-    public void setNameOfMeal(String nameOfMeal) {
-        this.nameOfMeal = nameOfMeal;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate localDate = LocalDate.parse(date, formatter);
-        this.date = localDate;
     }
 
     public double getProtein() {
@@ -81,5 +61,15 @@ public class MealEntry {
     public double getCalories(){
         this.calories = protein * 4 + fat * 9 + carbohydrates * 4;
         return calories;
+    }
+
+    public void setDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(date, formatter);
+        this.date = localDate;
+    }
+
+    public LocalDate getDate() {
+        return date;
     }
 }
