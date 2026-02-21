@@ -16,6 +16,19 @@ import java.util.Scanner;
 
 public class Main {
 
+    public static UserTargets enterTargets(Scanner scanner, User user) throws SQLException {
+        System.out.print("Enter Your target Protein: ");
+        double protein = scanner.nextDouble();
+        System.out.print("Enter Your target Fat: ");
+        double fat = scanner.nextDouble();
+        System.out.print("Enter Your target Carbohydrates: ");
+        double carbohydrates = scanner.nextDouble();
+        System.out.print("Enter Your target Fiber: ");
+        double fiber = scanner.nextDouble();
+        scanner.nextLine();
+        return new UserTargets(user.getId(), protein, fat, carbohydrates, fiber);
+    }
+
     public static void main(String[] args) throws SQLException {
 
         Database.createTables();
@@ -29,30 +42,12 @@ public class Main {
 
         if (!UserDAO.existsByName(name)) {
             user = new User(name, UserDAO.saveUser(name));
-            System.out.print("Enter Your target Protein: ");
-            double protein = scanner.nextDouble();
-            System.out.print("Enter Your target Fat: ");
-            double fat = scanner.nextDouble();
-            System.out.print("Enter Your target Carbohydrates: ");
-            double carbohydrates = scanner.nextDouble();
-            System.out.print("Enter Your target Fiber: ");
-            double fiber = scanner.nextDouble();
-            scanner.nextLine();
-            userTargets = new UserTargets(user.getId(), protein, fat, carbohydrates, fiber);
+            userTargets = enterTargets(scanner, user);
             UserTargetDAO.saveTargets(userTargets);
         } else {
             user = UserDAO.findByName(name);
             if (!UserTargetDAO.existsByUserId(user)){
-                System.out.print("Enter Your target Protein: ");
-                double protein = scanner.nextDouble();
-                System.out.print("Enter Your target Fat: ");
-                double fat = scanner.nextDouble();
-                System.out.print("Enter Your target Carbohydrates: ");
-                double carbohydrates = scanner.nextDouble();
-                System.out.print("Enter Your target Fiber: ");
-                double fiber = scanner.nextDouble();
-                scanner.nextLine();
-                userTargets = new UserTargets(user.getId(), protein, fat, carbohydrates, fiber);
+                userTargets = enterTargets(scanner, user);
                 UserTargetDAO.saveTargets(userTargets);
             } else {
                 userTargets = UserTargetDAO.findTargetsByUserId(user);
@@ -76,6 +71,11 @@ public class Main {
             if (nameOfMeal.equals("stop")) {
 
                 List<MealEntry> mealEntriesTotal = MealEntryDAO.findMealEntriesByUserId(user);
+
+                if (mealEntriesTotal.isEmpty()) {
+                    System.out.println("Come back after eating");
+                    break;
+                }
 
                 proteinTotal = 0;
                 fatTotal = 0;

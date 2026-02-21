@@ -60,9 +60,6 @@ public class MealEntryDAO {
 
             }
         }
-        if (mealEntries.isEmpty()){
-            throw new SQLException("MealEntries not found");
-        }
         return mealEntries;
     }
 }
