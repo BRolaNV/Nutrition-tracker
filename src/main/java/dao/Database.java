@@ -26,7 +26,7 @@ public class Database {
                     fat REAL NOT NULL,
                     carbohydrates REAL NOT NULL,
                     fiber REAL NOT NULL,
-                    created_date TEXT NOT NULL,
+                    date TEXT NOT NULL,
                     FOREIGN KEY (user_id) REFERENCES users(id)
                 );
                 """;
@@ -37,6 +37,7 @@ public class Database {
                     user_id INTEGER NOT NULL,
                     name TEXT NOT NULL,
                     protein REAL NOT NULL,
+                    fat REAL NOT NULL,
                     carbohydrates REAL NOT NULL,
                     fiber REAL NOT NULL,
                     date TEXT NOT NULL,
