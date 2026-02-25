@@ -2,14 +2,16 @@ package dao;
 
 import model.User;
 import model.UserTargets;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.Date;
 
+
+@Repository
 public class UserTargetDAO {
 
-    public static void saveTargets(UserTargets userTargets) throws SQLException {
+    public void saveTargets(UserTargets userTargets) throws SQLException {
 
         String sql ="INSERT INTO user_targets (user_id, protein, fat, carbohydrates, fiber, date) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -27,7 +29,7 @@ public class UserTargetDAO {
         }
     }
 
-    public static UserTargets findTargetsByUserId(User user) throws SQLException{
+    public UserTargets findTargetsByUserId(User user) throws SQLException{
         String sql = "SELECT * FROM user_targets WHERE user_id = ? ORDER BY id DESC LIMIT 1";
         UserTargets userTargets;
 
@@ -54,7 +56,7 @@ public class UserTargetDAO {
         return  userTargets;
     }
 
-    public static boolean existsByUserId(User user) throws SQLException{
+    public boolean existsByUserId(User user) throws SQLException{
         String sql = "SELECT * FROM user_targets WHERE user_id = ?";
         boolean isExist;
 

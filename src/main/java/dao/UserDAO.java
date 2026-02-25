@@ -1,12 +1,14 @@
 package dao;
 
 import model.User;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 
+@Repository
 public class UserDAO {
 
-    public static int saveUser(String name) throws SQLException {
+    public int saveUser(String name) throws SQLException {
         int id = 0;
         String sql = "INSERT INTO users (name) VALUES (?)";
         String idSql = "SELECT last_insert_rowid()";
@@ -26,7 +28,7 @@ public class UserDAO {
         return id;
     }
 
-    public static User findByName(String name) throws SQLException{
+    public User findByName(String name) throws SQLException{
         String sql = "SELECT * FROM users WHERE name = ?";
         User user;
 
@@ -48,7 +50,7 @@ public class UserDAO {
         return  user;
     }
 
-    public static boolean existsByName(String name) throws SQLException{
+    public boolean existsByName(String name) throws SQLException{
         String sql = "SELECT * FROM users WHERE name = ?";
         boolean isExist;
 

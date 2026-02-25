@@ -3,6 +3,7 @@ package dao;
 import model.MealEntry;
 import model.User;
 import model.UserTargets;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,11 +11,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+@Repository
 public class MealEntryDAO {
-    public static void saveMealEntry(MealEntry mealEntry) throws SQLException {
+    public void saveMealEntry(MealEntry mealEntry) throws SQLException {
 
         String sql ="INSERT INTO meal_entries (user_id, name, protein, fat, carbohydrates, fiber, date) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -33,7 +34,7 @@ public class MealEntryDAO {
         }
     }
 
-    public static List<MealEntry> findMealEntriesByUserId(User user) throws SQLException{
+    public List<MealEntry> findMealEntriesByUserId(User user) throws SQLException{
         String sql = "SELECT * FROM meal_entries WHERE user_id = ? AND date = ?";
         List<MealEntry> mealEntries = new ArrayList<>();
 
