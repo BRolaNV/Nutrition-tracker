@@ -14,7 +14,8 @@ public class Database {
         String createUserTable = """
                 CREATE TABLE IF NOT EXISTS users (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT NOT NULL
+                    name TEXT NOT NULL,
+                    chatId INTEGER NOT NULL
                 );
                 """;
 

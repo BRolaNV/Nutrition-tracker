@@ -12,13 +12,27 @@ public class UserService {
     @Autowired
     UserDAO userDAO;
 
-    public User getOrCreateUser(String name) throws SQLException {
-        User user;
-        if(userDAO.existsByName(name)){
-            user = userDAO.findByName(name);
-        } else {
-            user = new User(name, userDAO.saveUser(name));
+    public void createUser(String name, Long chatId) {
+        try {
+            User user = new User(name, userDAO.saveUser(name, chatId), chatId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        return user;
+    }
+
+    public boolean existByChatId(Long chatId) {
+        try {
+            return userDAO.existsByChatId(chatId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public User getUser(Long chatId) {
+        try {
+            return userDAO.findByChatId(chatId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

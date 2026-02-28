@@ -8,9 +8,9 @@ import java.sql.*;
 @Repository
 public class UserDAO {
 
-    public int saveUser(String name) throws SQLException {
+    public int saveUser(String name, Long chatId) throws SQLException {
         int id = 0;
-        String sql = "INSERT INTO users (name) VALUES (?)";
+        String sql = "INSERT INTO users (name, chatId) VALUES (?, ?)";
         String idSql = "SELECT last_insert_rowid()";
 
         try (Connection connection = Database.getConnection();
@@ -18,6 +18,7 @@ public class UserDAO {
              PreparedStatement preparedStatement1 = connection.prepareStatement(idSql);) {
 
             preparedStatement.setString(1, name);
+            preparedStatement.setLong(2, chatId);
             preparedStatement.execute();
 
             ResultSet set = preparedStatement1.executeQuery();
@@ -28,14 +29,14 @@ public class UserDAO {
         return id;
     }
 
-    public User findByName(String name) throws SQLException{
-        String sql = "SELECT * FROM users WHERE name = ?";
+    public User findByChatId(Long chatId) throws SQLException{
+        String sql = "SELECT * FROM users WHERE chatId = ?";
         User user;
 
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
 
-            preparedStatement.setString(1, name);
+            preparedStatement.setLong(1, chatId);
             ResultSet set = preparedStatement.executeQuery();
 
             if (!set.next()){
@@ -44,20 +45,21 @@ public class UserDAO {
 
             int userId = set.getInt(1);
             String userName = set.getString(2);
+            Long userChatId = set.getLong(3);
 
-            user = new User(userName, userId);
+            user = new User(userName, userId, userChatId);
         }
         return  user;
     }
 
-    public boolean existsByName(String name) throws SQLException{
-        String sql = "SELECT * FROM users WHERE name = ?";
+    public boolean existsByChatId(Long chatId) throws SQLException{
+        String sql = "SELECT * FROM users WHERE chatId = ?";
         boolean isExist;
 
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
 
-            preparedStatement.setString(1, name);
+            preparedStatement.setLong(1, chatId);
             ResultSet set = preparedStatement.executeQuery();
 
             isExist = set.next();
