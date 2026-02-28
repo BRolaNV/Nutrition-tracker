@@ -1,4 +1,4 @@
-package dao;
+package com.rolan.dao;
 
 import java.sql.*;
 

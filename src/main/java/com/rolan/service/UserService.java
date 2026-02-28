@@ -1,7 +1,7 @@
-package service;
+package com.rolan.service;
 
-import dao.UserDAO;
-import model.User;
+import com.rolan.dao.UserDAO;
+import com.rolan.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

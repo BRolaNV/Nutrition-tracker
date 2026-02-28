@@ -1,4 +1,4 @@
-package model;
+package com.rolan.model;
 
 public class User {
     private String userName;

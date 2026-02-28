@@ -1,8 +1,7 @@
-package dao;
+package com.rolan.dao;
 
-import model.MealEntry;
-import model.User;
-import model.UserTargets;
+import com.rolan.model.MealEntry;
+import com.rolan.model.User;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;

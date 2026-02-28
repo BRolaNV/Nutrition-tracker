@@ -1,6 +1,6 @@
-package dao;
+package com.rolan.dao;
 
-import model.User;
+import com.rolan.model.User;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;

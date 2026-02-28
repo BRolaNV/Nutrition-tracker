@@ -1,8 +1,8 @@
-package service;
+package com.rolan.service;
 
-import dao.UserTargetDAO;
-import model.User;
-import model.UserTargets;
+import com.rolan.dao.UserTargetDAO;
+import com.rolan.model.User;
+import com.rolan.model.UserTargets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

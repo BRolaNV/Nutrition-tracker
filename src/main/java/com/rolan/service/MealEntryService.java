@@ -1,10 +1,9 @@
-package service;
+package com.rolan.service;
 
 
-import dao.MealEntryDAO;
-import dao.UserTargetDAO;
-import model.MealEntry;
-import model.User;
+import com.rolan.dao.MealEntryDAO;
+import com.rolan.model.MealEntry;
+import com.rolan.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
