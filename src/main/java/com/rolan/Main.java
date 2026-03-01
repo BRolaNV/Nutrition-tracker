@@ -1,5 +1,6 @@
 package com.rolan;
 import com.rolan.bot.MindfulNTbot;
+import com.rolan.dao.Database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,6 +11,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 @SpringBootApplication
 public class Main implements CommandLineRunner {
+
     @Autowired
     private MindfulNTbot mindfulNTbot;
 
@@ -20,6 +22,7 @@ public class Main implements CommandLineRunner {
     }
 
     public static void main(String[] args) {
+        Database.createTables();
         SpringApplication.run(Main.class, args);
     }
 }

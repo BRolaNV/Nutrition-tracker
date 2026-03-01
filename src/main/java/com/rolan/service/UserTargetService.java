@@ -13,15 +13,31 @@ public class UserTargetService {
     @Autowired
     UserTargetDAO userTargetDAO;
 
-    public UserTargets getOrCreateUserTargets
-            (User user, double protein, double fat, double carbohydrates, double fiber) throws SQLException {
-        UserTargets userTargets;
-        if (userTargetDAO.existsByUserId(user)){
-           userTargets = userTargetDAO.findTargetsByUserId(user);
-        } else {
+    public UserTargets createUserTargets
+            (User user, double protein, double fat, double carbohydrates, double fiber){
+        UserTargets userTargets = null;
+        try {
             userTargets = new UserTargets(user.getId(), protein, fat, carbohydrates, fiber);
-            userTargetDAO.saveTargets(userTargets);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+
         return userTargets;
+    }
+
+    public boolean existsByUserId(User user){
+        try {
+            return userTargetDAO.existsByUserId(user);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public UserTargets findTargetsByUserId(User user) {
+        try {
+            return userTargetDAO.findTargetsByUserId(user);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

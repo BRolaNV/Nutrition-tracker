@@ -72,4 +72,11 @@ public class UserTargets {
     public LocalDate getDate() {
         return date;
     }
+    public String toString(){
+        return "\nProtein - " + getProtein() +
+                "\nFat - " + getFat() +
+                "\nCarbohydrates - " + getCarbohydrates() +
+                "\nFiber - " + getFiber() +
+                "\nCalories - " + getCalories();
+    }
 }
