@@ -36,7 +36,6 @@ public class Database {
                 CREATE TABLE IF NOT EXISTS meal_entries (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user_id INTEGER NOT NULL,
-                    name TEXT NOT NULL,
                     protein REAL NOT NULL,
                     fat REAL NOT NULL,
                     carbohydrates REAL NOT NULL,

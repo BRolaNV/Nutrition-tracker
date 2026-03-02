@@ -16,7 +16,7 @@ import java.util.List;
 public class MealEntryDAO {
     public void saveMealEntry(MealEntry mealEntry) throws SQLException {
 
-        String sql ="INSERT INTO meal_entries (user_id, protein, fat, carbohydrates, fiber, date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql ="INSERT INTO meal_entries (user_id, protein, fat, carbohydrates, fiber, date) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);) {

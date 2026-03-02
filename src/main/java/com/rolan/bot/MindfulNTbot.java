@@ -74,13 +74,18 @@ public class MindfulNTbot extends TelegramLongPollingBot {
 
                 if (userService.existByChatId(chatId)){
                     User user = userService.getUser(chatId);
-                    sendMessage.setChatId(chatId);
-                    sendMessage.setText("Hello, " + user.getUserName() + "!");
+                    sendMessage.builder()
+                            .chatId(chatId)
+                            .text("Hello, " + user.getUserName() + "!")
+                            .build();
                     send(sendMessage);
+                    usersStates.put(chatId, UserState.MAIN_MENU);
 
                         if(!userTargetService.existsByUserId(userService.getUser(chatId))){
-                            sendMessage.setChatId(chatId);
-                            sendMessage.setText("What's your target protein?");
+                            sendMessage.builder()
+                                    .chatId(chatId)
+                                    .text("What's your target protein?")
+                                    .build();
                             usersStates.put(chatId, UserState.WAITING_FOR_PROTEIN);
                             usersContext.put(chatId, "target");
                             send(sendMessage);
@@ -116,14 +121,13 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                         usersMacros.put(chatId, new double[4]);
                         usersMacros.get(chatId)[0] = Double.parseDouble(message);
                         sendMessage.setChatId(chatId);
-                        sendMessage.setText("Grate!" +
+                        sendMessage.setText("Great!" +
                                 "\nWhat's about fat?");
                         usersStates.put(chatId, UserState.WAITING_FOR_FAT);
                         send(sendMessage);
                     } else {
                         sendMessage.setChatId(chatId);
-                        sendMessage.setText("i'm so sorry, but this isn't numeric" +
-                                "\nPlease try again!");
+                        sendMessage.setText("Please enter a number!");
                         usersStates.put(chatId, UserState.WAITING_FOR_PROTEIN);
                         send(sendMessage);
                     }
@@ -140,8 +144,7 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                             send(sendMessage);
                         } else {
                             sendMessage.setChatId(chatId);
-                            sendMessage.setText("i'm so sorry, but this isn't numeric" +
-                                    "\nPlease try again!");
+                            sendMessage.setText("Please enter a number!");
                             usersStates.put(chatId, UserState.WAITING_FOR_FAT);
                             send(sendMessage);
                         }
@@ -158,8 +161,7 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                             send(sendMessage);
                         } else {
                             sendMessage.setChatId(chatId);
-                            sendMessage.setText("i'm so sorry, but this isn't numeric" +
-                                    "\nPlease try again!");
+                            sendMessage.setText("Please enter a number!");
                             usersStates.put(chatId, UserState.WAITING_FOR_CARBS);
                             send(sendMessage);
                         }
@@ -183,8 +185,8 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                                         (userService.getUser(chatId), protein, fat, carbohydrates, fiber);
 
                                 sendMessage.setChatId(chatId);
-                                sendMessage.setText("It's done, congratulations!" +
-                                        "\nIt's your targets:" + userTargets.toString());
+                                sendMessage.setText("It's done, congratulations!\n" +
+                                        "\nYour targets:\n" + userTargets.toString());
                                 send(sendMessage);
                                 sendMainMenu(chatId);
                                 usersStates.put(chatId, UserState.MAIN_MENU);
@@ -206,8 +208,7 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                         } else {
 
                             sendMessage.setChatId(chatId);
-                            sendMessage.setText("i'm so sorry, but this isn't numeric" +
-                                    "\nPlease try again!");
+                            sendMessage.setText("Please enter a number!");
                             usersStates.put(chatId, UserState.WAITING_FOR_FIBER);
                             send(sendMessage);
                         }
@@ -217,12 +218,12 @@ public class MindfulNTbot extends TelegramLongPollingBot {
 
                         if (message.equals("Add meal")) {
 
-                            sendMessage.setChatId(chatId);
-                            sendMessage.setText("Tell, how many macros did you eat?" +
-                                    "\nLet's start with protein.");
-                            userService.createUser(message, chatId);
-                            usersStates.put(chatId, UserState.WAITING_FOR_PROTEIN);
                             usersContext.put(chatId, "meal");
+                            sendMessage.setChatId(chatId);
+                            sendMessage.setText("How many macros did you eat?" +
+                                    "\nLet's start with protein.");
+                            usersStates.put(chatId, UserState.WAITING_FOR_PROTEIN);
+
                             send(sendMessage);
 
                         } else if (message.equals("Get day result")) {
@@ -246,7 +247,7 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                             }
 
                             sendMessage.setChatId(chatId);
-                            sendMessage.setText("You have eaten today: \n" +
+                            sendMessage.setText("Today you've eaten: \n" +
 
                                     "\nProtein - " + protein +
                                     "\nFat - " + fat +
@@ -254,13 +255,14 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                                     "\nFiber - " + fiber +
                                     "\nCalories - " + calories +
 
-                                    "\nToday you can still eat: \n" +
+                                    "\n\nRemaining for today: \n" +
 
                                     "\nProtein - " + (ut.getProtein() -protein) +
                                     "\nFat - " + (ut.getFat() - fat) +
                                     "\nCarbs - " + (ut.getCarbohydrates() - carbohydrates) +
                                     "\nFiber - " + (ut.getFiber() - fiber) +
                                     "\nCalories - " + (ut.getCalories() - calories));
+                            send(sendMessage);
                         }
                         break;
                 };
