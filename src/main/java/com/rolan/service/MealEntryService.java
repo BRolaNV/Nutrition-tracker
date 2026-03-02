@@ -15,11 +15,19 @@ public class MealEntryService {
     @Autowired
     private MealEntryDAO mealEntryDAO;
 
-    public void createMealEntry(User user, String nameOfMeal, double protein, double fat, double carbohydrates, double fiber) throws SQLException {
-        mealEntryDAO.saveMealEntry(new MealEntry(user.getId(), nameOfMeal, protein, fat,  carbohydrates, fiber));
+    public void createMealEntry(User user, double protein, double fat, double carbohydrates, double fiber){
+        try {
+            mealEntryDAO.saveMealEntry(new MealEntry(user.getId(), protein, fat,  carbohydrates, fiber));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public List<MealEntry> getMealEntry(User user) throws SQLException {
-        return mealEntryDAO.findMealEntriesByUserId(user);
+    public List<MealEntry> getMealEntry(User user) {
+        try {
+            return mealEntryDAO.findMealEntriesByUserId(user);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

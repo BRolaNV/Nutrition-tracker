@@ -7,7 +7,6 @@ import java.util.Date;
 public class MealEntry {
 
     private int userId;
-    private String nameOfMeal;
     private double protein;
     private double fat;
     private double carbohydrates;
@@ -15,9 +14,8 @@ public class MealEntry {
     private double calories;
     private LocalDate date;
 
-    public MealEntry(int userId, String nameOfMeal, double protein, double fat, double carbohydrates, double fiber) {
+    public MealEntry(int userId, double protein, double fat, double carbohydrates, double fiber) {
         this.userId = userId;
-        this.nameOfMeal = nameOfMeal;
         this.protein = protein;
         this.fat = fat;
         this.carbohydrates = carbohydrates;
@@ -26,14 +24,6 @@ public class MealEntry {
 
     public int getUserId() {
         return userId;
-    }
-
-    public String getNameOfMeal() {
-        return nameOfMeal;
-    }
-
-    public void setNameOfMeal(String nameOfMeal) {
-        this.nameOfMeal = nameOfMeal;
     }
 
     public LocalDate getDate() {
