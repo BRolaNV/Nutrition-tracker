@@ -18,6 +18,7 @@ public class UserTargetService {
         UserTargets userTargets = null;
         try {
             userTargets = new UserTargets(user.getId(), protein, fat, carbohydrates, fiber);
+            userTargetDAO.saveTargets(userTargets);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

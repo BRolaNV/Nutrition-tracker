@@ -11,15 +11,19 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Component
 public class MindfulNTbot extends TelegramLongPollingBot {
 
     HashMap<Long, UserState> usersStates = new HashMap<>();
-    HashMap<Long, double[]> usersTargets = new HashMap<>();
+    HashMap<Long, double[]> usersMacros = new HashMap<>();
 
     @Autowired
     private UserService userService;
@@ -72,9 +76,10 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                         if(!userTargetService.existsByUserId(userService.getUser(chatId))){
                             sendMessage.setChatId(chatId);
                             sendMessage.setText("What's your target protein?");
-                            userService.createUser(message, chatId);
                             usersStates.put(chatId, UserState.WAITING_FOR_PROTEIN);
                             send(sendMessage);
+                        } else {
+                            sendMainMenu(chatId);
                         }
 
                 } else {
@@ -102,8 +107,8 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                     case WAITING_FOR_PROTEIN:
 
                     if (isNumeric(message)) {
-                        usersTargets.put(chatId, new double[4]);
-                        usersTargets.get(chatId)[0] = Double.parseDouble(message);
+                        usersMacros.put(chatId, new double[4]);
+                        usersMacros.get(chatId)[0] = Double.parseDouble(message);
                         sendMessage.setChatId(chatId);
                         sendMessage.setText("Grate!" +
                                 "\nWhat's your target fat?");
@@ -121,7 +126,7 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                     case WAITING_FOR_FAT:
 
                         if (isNumeric(message)) {
-                            usersTargets.get(chatId)[1] = Double.parseDouble(message);
+                            usersMacros.get(chatId)[1] = Double.parseDouble(message);
                             sendMessage.setChatId(chatId);
                             sendMessage.setText("Excellent!" +
                                     "\nWhat's your target carbs?");
@@ -139,7 +144,7 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                     case WAITING_FOR_CARBS:
 
                         if (isNumeric(message)) {
-                            usersTargets.get(chatId)[2] = Double.parseDouble(message);
+                            usersMacros.get(chatId)[2] = Double.parseDouble(message);
                             sendMessage.setChatId(chatId);
                             sendMessage.setText("Good job!" +
                                     "\nWhat's your target fiber?");
@@ -157,9 +162,9 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                     case WAITING_FOR_FIBER:
 
                         if (isNumeric(message)) {
-                            usersTargets.get(chatId)[3] = Double.parseDouble(message);
+                            usersMacros.get(chatId)[3] = Double.parseDouble(message);
 
-                            double[] targets = usersTargets.get(chatId);
+                            double[] targets = usersMacros.get(chatId);
                             double protein = targets[0];
                             double fat  = targets[1];
                             double carbohydrates = targets[2];
@@ -172,6 +177,9 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                             sendMessage.setText("It's done, congratulations!" +
                                     "\nIt's your targets:" +  userTargets.toString());
                             send(sendMessage);
+                            sendMainMenu(chatId);
+                            usersStates.put(chatId, UserState.MAIN_MENU);
+                            usersMacros.remove(chatId);
                         } else {
                             sendMessage.setChatId(chatId);
                             sendMessage.setText("i'm so sorry, but this isn't numeric" +
@@ -179,12 +187,39 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                             usersStates.put(chatId, UserState.WAITING_FOR_FIBER);
                             send(sendMessage);
                         }
+                        break;
+
+                    case MAIN_MENU:
+
+                        if (message.equals("Add meal")) {
+
+                        } else if (message.equals("Get day result")) {
+
+                        }
+
                 };
-
-
-
             }
         }
+    }
+
+    public void sendMainMenu(Long chatId){
+        KeyboardRow row = new KeyboardRow();
+        row.add("Add meal");
+        row.add("Get day result");
+
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        keyboard.add(row);
+
+        ReplyKeyboardMarkup replyMarkup = new ReplyKeyboardMarkup();
+        replyMarkup.setKeyboard(keyboard);
+        replyMarkup.setResizeKeyboard(true);
+        replyMarkup.setOneTimeKeyboard(false);
+
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
+        message.setText("Main menu:");
+        message.setReplyMarkup(replyMarkup);
+        send(message);
     }
 
     @Override
