@@ -50,8 +50,14 @@ public class UserTargetDAO {
             double fiber = set.getDouble(6);
             String date = set.getString(7);
 
-            userTargets = new UserTargets(userId, protein, fat, carbohydrates, fiber);
-            userTargets.setDate(date);
+            userTargets = UserTargets.builder()
+                    .userId(userId)
+                    .protein(protein)
+                    .fat(fat)
+                    .carbohydrates(carbohydrates)
+                    .fiber(fiber)
+                    .date(LocalDate.parse(date))
+                    .build();
         }
         return  userTargets;
     }

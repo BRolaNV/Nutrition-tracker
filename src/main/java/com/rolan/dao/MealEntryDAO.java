@@ -52,8 +52,14 @@ public class MealEntryDAO {
                 String date = set.getString(7);
 
 
-                MealEntry mealEntry = new MealEntry(userId, protein, fat, carbohydrates, fiber);
-                mealEntry.setDate(date);
+                MealEntry mealEntry = MealEntry.builder()
+                        .userId(userId)
+                        .protein(protein)
+                        .fat(fat)
+                        .carbohydrates(carbohydrates)
+                        .fiber(fiber)
+                        .date(LocalDate.parse(date))
+                        .build();
                 mealEntries.add(mealEntry);
 
             }

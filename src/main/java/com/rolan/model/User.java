@@ -1,25 +1,18 @@
 package com.rolan.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
+
     private String userName;
     private int id;
     private Long chatId;
 
-    public User(String name, int id, Long chatId) {
-        this.userName = name;
-        this.id = id;
-        this.chatId = chatId;
-    }
-
-    public String getUserName(){
-        return userName;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public Long getChatId() {
-        return chatId;
-    }
 }

@@ -17,7 +17,13 @@ public class UserTargetService {
             (User user, double protein, double fat, double carbohydrates, double fiber){
         UserTargets userTargets = null;
         try {
-            userTargets = new UserTargets(user.getId(), protein, fat, carbohydrates, fiber);
+            userTargets = UserTargets.builder()
+                    .userId(user.getId())
+                    .protein(protein)
+                    .fat(fat)
+                    .carbohydrates(carbohydrates)
+                    .fiber(fiber)
+                    .build();
             userTargetDAO.saveTargets(userTargets);
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -17,7 +17,13 @@ public class MealEntryService {
 
     public void createMealEntry(User user, double protein, double fat, double carbohydrates, double fiber){
         try {
-            mealEntryDAO.saveMealEntry(new MealEntry(user.getId(), protein, fat,  carbohydrates, fiber));
+            mealEntryDAO.saveMealEntry(MealEntry.builder()
+                    .userId(user.getId())
+                    .protein(protein)
+                    .fat(fat)
+                    .carbohydrates(carbohydrates)
+                    .fiber(fiber)
+                    .build());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
