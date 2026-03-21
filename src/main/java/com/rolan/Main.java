@@ -1,6 +1,5 @@
 package com.rolan;
 import com.rolan.bot.MindfulNTbot;
-import com.rolan.dao.Database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -22,7 +21,6 @@ public class Main implements CommandLineRunner {
     }
 
     public static void main(String[] args) {
-        Database.createTables();
         SpringApplication.run(Main.class, args);
     }
 }
