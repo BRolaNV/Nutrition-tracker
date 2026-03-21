@@ -1,50 +1,12 @@
 package com.rolan.service;
 
-import com.rolan.dao.UserTargetDAO;
 import com.rolan.model.User;
 import com.rolan.model.UserTargets;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
+import java.util.List;
 
-@Service
-public class UserTargetService {
-    @Autowired
-    UserTargetDAO userTargetDAO;
-
-    public UserTargets createUserTargets
-            (User user, double protein, double fat, double carbohydrates, double fiber){
-        UserTargets userTargets = null;
-        try {
-            userTargets = UserTargets.builder()
-                    .userId(user.getId())
-                    .protein(protein)
-                    .fat(fat)
-                    .carbohydrates(carbohydrates)
-                    .fiber(fiber)
-                    .build();
-            userTargetDAO.saveTargets(userTargets);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        return userTargets;
-    }
-
-    public boolean existsByUserId(User user){
-        try {
-            return userTargetDAO.existsByUserId(user);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public UserTargets findTargetsByUserId(User user) {
-        try {
-            return userTargetDAO.findTargetsByUserId(user);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+public interface UserTargetService {
+    UserTargets createUserTargets(User user, double protein, double fat, double carbohydrates, double fiber);
+    boolean existsByUserId(User user);
+    List<UserTargets> findTargetsByUserId(User user);
 }

@@ -339,7 +339,8 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                             double fiber = 0;
                             double calories = 0;
 
-                            UserTargets ut = userTargetService.findTargetsByUserId(userService.getUser(chatId));
+                            List<UserTargets> uts = userTargetService.findTargetsByUserId(userService.getUser(chatId));
+                            UserTargets ut = uts.get(uts.size() - 1);
 
                             for (MealEntry mealEntry : mealEntries) {
                                 protein += mealEntry.getProtein();

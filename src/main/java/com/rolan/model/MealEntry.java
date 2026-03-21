@@ -1,5 +1,6 @@
 package com.rolan.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,14 +14,20 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "meal_entries")
+@Entity
 public class MealEntry {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @Column(name = "user_id")
     private int userId;
     private double protein;
     private double fat;
     private double carbohydrates;
     private double fiber;
-    private double calories;
+    @Column(name = "name_of_meal")
     private String nameOfMeal;
     private LocalDate date;
 
@@ -31,8 +38,8 @@ public class MealEntry {
         this.date = localDate;
     }
 
+    @Transient
     public double getCalories(){
-        this.calories = protein * 4 + fat * 9 + carbohydrates * 4;
-        return calories;
+        return protein * 4 + fat * 9 + carbohydrates * 4;
     }
 }
