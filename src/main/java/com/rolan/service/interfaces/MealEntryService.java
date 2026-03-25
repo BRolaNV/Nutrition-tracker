@@ -1,4 +1,4 @@
-package com.rolan.service;
+package com.rolan.service.interfaces;
 
 import com.rolan.model.MealEntry;
 import com.rolan.model.User;

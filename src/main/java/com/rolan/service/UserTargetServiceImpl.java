@@ -3,6 +3,7 @@ package com.rolan.service;
 import com.rolan.model.User;
 import com.rolan.model.UserTargets;
 import com.rolan.repository.UserTargetRepository;
+import com.rolan.service.interfaces.UserTargetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserTargetServiceImpl implements UserTargetService{
+public class UserTargetServiceImpl implements UserTargetService {
 
     private final UserTargetRepository userTargetRepository;
 

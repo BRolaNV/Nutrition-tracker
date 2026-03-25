@@ -3,6 +3,7 @@ package com.rolan.service;
 import com.rolan.model.MealEntry;
 import com.rolan.model.User;
 import com.rolan.repository.MealEntryRepository;
+import com.rolan.service.interfaces.MealEntryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MealEntryServiceImpl implements MealEntryService{
+public class MealEntryServiceImpl implements MealEntryService {
 
     private final MealEntryRepository mealEntryRepository;
 

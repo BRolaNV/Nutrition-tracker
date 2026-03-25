@@ -2,12 +2,13 @@ package com.rolan.service;
 
 import com.rolan.model.User;
 import com.rolan.repository.UserRepository;
+import com.rolan.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
