@@ -4,7 +4,9 @@ import com.rolan.model.MealEntry;
 import com.rolan.model.User;
 import com.rolan.model.UserState;
 import com.rolan.model.UserTargets;
+import com.rolan.model.usda.USDAFoodSearchResponse;
 import com.rolan.service.interfaces.MealEntryService;
+import com.rolan.service.interfaces.USDAFoodService;
 import com.rolan.service.interfaces.UserService;
 import com.rolan.service.interfaces.UserTargetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,8 @@ public class MindfulNTbot extends TelegramLongPollingBot {
     private UserTargetService userTargetService;
     @Autowired
     private MealEntryService mealEntryService;
+    @Autowired
+    private USDAFoodService usdaFoodService;
 
     @Value("${telegram.bot.username}")
     private String botUserName;
@@ -84,6 +88,8 @@ public class MindfulNTbot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
+        SendMessage sendMessage;
+
         if(update.hasCallbackQuery()){
 
             String callbackData = update.getCallbackQuery().getData();
@@ -107,7 +113,7 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                 case "LEFT_TO_EAT":
                     break;
                 case "ENTER_MACROS":
-                    SendMessage sendMessage = SendMessage.builder()
+                    sendMessage = SendMessage.builder()
                             .chatId(chatId)
                             .text("How much protein?")
                             .build();
@@ -115,14 +121,22 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                     usersContext.put(chatId, "meal");
                     send(sendMessage);
                     break;
-
+                case "SEARCH_MEAL":
+                    sendMessage = SendMessage.builder()
+                            .chatId(chatId)
+                            .text("Send a name of product:")
+                            .build();
+                    usersStates.put(chatId, UserState.WAITING_FOR_NAME_OF_PRODUCT);
+                    send(sendMessage);
+                    break;
+                case "ADD_TO_LIST":
+                    break;
             }
         }
 
         if (update.hasMessage() && update.getMessage().hasText()) {
 
             String message = update.getMessage().getText();
-            SendMessage sendMessage = new SendMessage();
             Long chatId = update.getMessage().getChatId();
 
             if (message.equals("/start")) {
@@ -315,6 +329,9 @@ public class MindfulNTbot extends TelegramLongPollingBot {
                         }
                         break;
 
+                    case WAITING_FOR_NAME_OF_PRODUCT:
+                        USDAFoodSearchResponse usdaFoodSearchResponse = usdaFoodService.searchFood(message, 10);
+
                     case MAIN_MENU:
 
                         if (message.equals("Add meal")) {
@@ -389,7 +406,7 @@ public class MindfulNTbot extends TelegramLongPollingBot {
 
         List<InlineKeyboardButton> row1 = new ArrayList<>();
         InlineKeyboardButton addMeal = new InlineKeyboardButton();
-        addMeal.setText("🍽 Add meal");
+        addMeal.setText("Add meal");
         addMeal.setCallbackData("ADD_MEAL");
         row1.add(addMeal);
 
@@ -402,7 +419,7 @@ public class MindfulNTbot extends TelegramLongPollingBot {
 
         List<InlineKeyboardButton> row2 = new ArrayList<>();
         InlineKeyboardButton leftToEat = new InlineKeyboardButton();
-        leftToEat.setText("🍽 Left to eat");
+        leftToEat.setText("Left to eat");
         leftToEat.setCallbackData("LEFT_TO_EAT");
         row2.add(leftToEat);
 
@@ -429,21 +446,35 @@ public class MindfulNTbot extends TelegramLongPollingBot {
         enterMacros.setCallbackData("ENTER_MACROS");
         row1.add(enterMacros);
 
-        InlineKeyboardButton chooseFromList = new InlineKeyboardButton();
-        chooseFromList.setText("Choose from list");
-        chooseFromList.setCallbackData("CHOOSE_FROM_LIST");
-        row1.add(chooseFromList);
+        InlineKeyboardButton searchProduct = new InlineKeyboardButton();
+        searchProduct.setText("Search product");
+        searchProduct.setCallbackData("SEARCH_PRODUCT");
+        row1.add(searchProduct);
 
         keyboard.add(row1);
 
         List<InlineKeyboardButton> row2 = new ArrayList<>();
 
+        InlineKeyboardButton chooseFromList = new InlineKeyboardButton();
+        chooseFromList.setText("Choose from list");
+        chooseFromList.setCallbackData("CHOOSE_FROM_LIST");
+        row2.add(chooseFromList);
+
+        InlineKeyboardButton addToList = new InlineKeyboardButton();
+        addToList.setText("Add to List");
+        addToList.setCallbackData("ADD_TO_LIST");
+        row2.add(addToList);
+
+        keyboard.add(row2);
+
+        List<InlineKeyboardButton> row3 = new ArrayList<>();
+
         InlineKeyboardButton back = new InlineKeyboardButton();
         back.setText("Back");
         back.setCallbackData("BACK");
-        row2.add(back);
+        row3.add(back);
 
-        keyboard.add(row2);
+        keyboard.add(row3);
 
         markup.setKeyboard(keyboard);
 

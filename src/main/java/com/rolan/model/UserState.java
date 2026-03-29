@@ -6,5 +6,6 @@ public enum UserState {
     WAITING_FOR_FAT,
     WAITING_FOR_CARBS,
     WAITING_FOR_FIBER,
-    MAIN_MENU
+    MAIN_MENU,
+    WAITING_FOR_NAME_OF_PRODUCT
 }
